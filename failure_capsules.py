@@ -21,6 +21,16 @@ SCHEMA_VERSION = "1.0"
 GENERATOR_NAME = "synthetic-linear-drift-v1"
 MAX_POINTS = 10_000
 MAX_TEXT_LENGTH = 2_000
+MAX_EXACT_INT = 2**53
+MAX_ABS_RECIPE_VALUE = 1e9
+MAX_FEATURES = 32
+MAX_FEATURE_KEY_LENGTH = 80
+MAX_FEATURE_VALUE_LENGTH = 80
+_NUMERIC_LIST = re.compile(
+    r"^\s*[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?"
+    r"(\s*[,;\s]\s*[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)+\s*$"
+)
+LOAD_ERRORS = (OSError, ValueError, RecursionError)  # ValueError covers JSONDecodeError and UnicodeDecodeError
 
 _TOP_LEVEL_KEYS = {
     "schema_version",
@@ -109,6 +119,9 @@ def _check_number(value: Any, path: str, errors: list[str]) -> bool:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         errors.append(f"{path} must be a number")
         return False
+    if isinstance(value, int) and abs(value) > MAX_EXACT_INT:
+        errors.append(f"{path} must be an integer with magnitude at most 2**53")
+        return False
     if not math.isfinite(value):
         errors.append(f"{path} must be finite")
         return False
@@ -185,13 +198,22 @@ def validate_capsule(capsule: Any) -> list[str]:
     if not isinstance(features, dict) or not features:
         errors.append("coarse_features must be a non-empty object of categorical strings")
     else:
+        if len(features) > MAX_FEATURES:
+            errors.append(f"coarse_features must have at most {MAX_FEATURES} entries")
         for key, value in features.items():
             if not isinstance(key, str) or not key.strip():
                 errors.append("coarse_features keys must be non-empty strings")
+            elif len(key) > MAX_FEATURE_KEY_LENGTH:
+                errors.append(
+                    f"coarse_features key {key[:20]!r}... must be at most {MAX_FEATURE_KEY_LENGTH} characters"
+                )
+                continue
             if not isinstance(value, str) or not value.strip():
                 errors.append(f"coarse_features.{key} must be a non-empty categorical string")
-            elif len(value) > 80:
-                errors.append(f"coarse_features.{key} must be at most 80 characters")
+            elif len(value) > MAX_FEATURE_VALUE_LENGTH:
+                errors.append(f"coarse_features.{key} must be at most {MAX_FEATURE_VALUE_LENGTH} characters")
+            elif _NUMERIC_LIST.match(value):
+                errors.append(f"coarse_features.{key} looks like a list of numbers, not a categorical value")
 
     replay = capsule["replay"]
     if _check_object(replay, {"generator", "seed", "recipe"}, "replay", errors):
@@ -207,7 +229,9 @@ def validate_capsule(capsule: Any) -> list[str]:
             if isinstance(points, bool) or not isinstance(points, int) or not 1 <= points <= MAX_POINTS:
                 errors.append(f"replay.recipe.points must be an integer from 1 through {MAX_POINTS}")
             for key in ("baseline", "noise_stddev", "drift_per_step"):
-                _check_number(recipe[key], f"replay.recipe.{key}", errors)
+                if _check_number(recipe[key], f"replay.recipe.{key}", errors):
+                    if abs(recipe[key]) > MAX_ABS_RECIPE_VALUE:
+                        errors.append(f"replay.recipe.{key} must have magnitude at most {MAX_ABS_RECIPE_VALUE:g}")
             if _check_number(recipe["noise_stddev"], "replay.recipe.noise_stddev", []):
                 if recipe["noise_stddev"] < 0:
                     errors.append("replay.recipe.noise_stddev must not be negative")
@@ -245,6 +269,9 @@ def generate_replay(
 ) -> list[float]:
     """Generate a deterministic synthetic baseline-plus-drift sequence.
 
+    Output is deterministic for a given seed and recipe on CPython 3.x
+    (``random.Random`` / ``gauss``); other Python implementations may differ.
+
     All returned values are invented by this function; they are not intended
     to represent or contain captured device readings.
     """
@@ -255,8 +282,14 @@ def generate_replay(
     if isinstance(drift_start, bool) or not isinstance(drift_start, int) or not 0 <= drift_start <= points:
         raise ValueError("drift_start must be an integer from 0 through points")
     for name, value in (("baseline", baseline), ("noise_stddev", noise_stddev), ("drift_per_step", drift_per_step)):
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
             raise ValueError(f"{name} must be a finite number")
+        if isinstance(value, int) and abs(value) > MAX_EXACT_INT:
+            raise ValueError(f"{name} must be an integer with magnitude at most 2**53")
+        if not math.isfinite(value):
+            raise ValueError(f"{name} must be a finite number")
+        if abs(value) > MAX_ABS_RECIPE_VALUE:
+            raise ValueError(f"{name} must have magnitude at most {MAX_ABS_RECIPE_VALUE:g}")
     if noise_stddev < 0:
         raise ValueError("noise_stddev must not be negative")
 
@@ -264,7 +297,10 @@ def generate_replay(
     series = []
     for index in range(points):
         drift = max(0, index - drift_start) * drift_per_step
-        series.append(round(baseline + rng.gauss(0.0, noise_stddev) + drift, 6))
+        point = round(baseline + rng.gauss(0.0, noise_stddev) + drift, 6)
+        if not math.isfinite(point):  # defensive; bounds above should prevent this
+            raise ValueError("replay produced a non-finite value; reduce recipe magnitudes")
+        series.append(point)
     return series
 
 
@@ -276,7 +312,7 @@ def _load_json(path: Path) -> Any:
 def _demo(example_path: Path) -> int:
     try:
         capsule = _load_json(example_path)
-    except (OSError, json.JSONDecodeError) as exc:
+    except LOAD_ERRORS as exc:
         print(f"Could not load example capsule: {exc}", file=sys.stderr)
         return 2
     errors = validate_capsule(capsule)
@@ -284,7 +320,7 @@ def _demo(example_path: Path) -> int:
         print("Example capsule is invalid:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
-        return 2
+        return 1
     recipe = capsule["replay"]["recipe"]
     sequence = generate_replay(capsule["replay"]["seed"], **recipe)
     print(json.dumps({
@@ -298,6 +334,7 @@ def _demo(example_path: Path) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Exit codes: 0 = valid, 1 = invalid capsule, 2 = file could not be read or parsed."""
     parser = argparse.ArgumentParser(description="Validate offline failure capsules or run a synthetic demo.")
     commands = parser.add_subparsers(dest="command", required=True)
     validate_parser = commands.add_parser("validate", help="validate one capsule JSON file")
@@ -309,7 +346,7 @@ def main(argv: list[str] | None = None) -> int:
         return _demo(Path(__file__).resolve().parent / "examples" / "example_capsule.json")
     try:
         capsule = _load_json(args.path)
-    except (OSError, json.JSONDecodeError) as exc:
+    except LOAD_ERRORS as exc:
         print(f"Could not read capsule: {exc}", file=sys.stderr)
         return 2
     errors = validate_capsule(capsule)

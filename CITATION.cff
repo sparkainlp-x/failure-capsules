@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Failure Capsules"
+abstract: "Offline Python prototype that validates compact incident-capsule JSON and generates deterministic synthetic replays without original sensor measurements."
+type: software
+authors:
+  - given-names: "Jean-François"
+    family-names: "Brisson"
+    affiliation: "Spark AI NLP"
+repository-code: "https://github.com/sparkainlp-x/failure-capsules"
+license: MIT
+version: "0.1.0"
+date-released: "2026-09-29"
+keywords:
+  - incident reporting
+  - synthetic data
+  - reproducibility
+  - json schema
