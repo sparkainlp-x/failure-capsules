@@ -1,0 +1,39 @@
+name: Research question
+description: Ask about a definition, method, threshold, or result.
+title: "question: "
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What would you like to understand?
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Where in the repository?
+      description: File path, section, or line link.
+      placeholder: "failure_capsules.py#L118"
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Evidence tag of the item you are asking about (if any)
+      options:
+        - SYNTHETIC
+        - REPORTED
+        - TARGET
+        - UNRUN
+        - Not tagged / not sure
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Your use case, related papers or code, anything that helps us answer.
+  - type: checkboxes
+    id: access
+    attributes:
+      label: Accessibility
+      options:
+        - label: I would like the answer in an alternative format (say which in Context).

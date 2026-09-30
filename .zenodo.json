@@ -1,0 +1,36 @@
+{
+  "upload_type": "software",
+  "title": "failure-capsules: offline incident capsules with a deterministic synthetic replay",
+  "description": "<p>Standard-library Python research prototype that turns an incident into a compact, schema-validated JSON bug report (a <em>failure capsule</em>) without including original sensor measurements. A capsule records software and configuration versions, a timestamp policy, broad device/channel-group categories, an event class, categorical coarse features, a seeded synthetic replay recipe, expected and observed behavior, and a self-reported checklist. The validator is fail-closed: unknown fields, known raw-data key names, oversized integers, unbounded recipe values and number-list feature values are rejected, and unreadable input exits with a non-zero code instead of a traceback. The replay generator produces a baseline-plus-drift sequence that is deterministic for a given seed and recipe on CPython 3.x.</p><p><strong>Evidence tags.</strong> Replay values, the example capsule and unit tests: <strong>SYNTHETIC</strong>. Use on real incident workflows: <strong>UNRUN</strong> (not claimed). No performance or privacy metrics are claimed.</p><p><strong>Scope and limits.</strong> Research prototype. It is a format guard, not a privacy scanner, and it does not perform certified anonymization, de-identification, encryption or access control. It is not a certified safety system, a medical device or a commercial product. No production-readiness claim is made.</p><p>Evidence tags follow <a href=\"https://github.com/sparkainlp-x/.github#evidence-tags\">sparkainlp-x/.github</a> (SYNTHETIC / REPORTED / TARGET / UNRUN).</p>",
+  "creators": [
+    {
+      "name": "Brisson, Jean-François",
+      "affiliation": "Spark AI NLP"
+    }
+  ],
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "incident reporting",
+    "bug report",
+    "synthetic data",
+    "deterministic replay",
+    "JSON schema",
+    "fail-closed validation",
+    "Python",
+    "research software"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/sparkainlp-x/failure-capsules",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ],
+  "language": "eng",
+  "communities": [
+    {
+      "identifier": "spark-ai-nlp"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+name: Bug report
+description: Something in the code, tests, CI, or docs does not work as documented.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a problem. Please do not include personal contact details or secrets.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Tag or commit SHA you used.
+      placeholder: "v0.1.0 or a1b2c3d"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands, starting from a fresh clone if possible.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Paste the full output or error text.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python / compiler / CMake versions.
+      placeholder: "Ubuntu 24.04, Python 3.12.3"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: This is not a security vulnerability (those go through private reporting, see SECURITY.md).
+          required: true

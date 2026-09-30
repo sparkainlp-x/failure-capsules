@@ -1,0 +1,46 @@
+name: Claim correction
+description: A statement or number looks unsupported, untagged, or mis-tagged.
+title: "claim: "
+labels: ["claim-correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We follow a fail-closed claim policy: every number carries SYNTHETIC, REPORTED, TARGET, or UNRUN, and
+        unsupported claims are removed. Thank you for helping keep these repositories honest.
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Link to the file and line (use a permalink with a commit SHA if possible).
+    validations:
+      required: true
+  - type: textarea
+    id: quote
+    attributes:
+      label: Exact quote
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: Problem type
+      multiple: true
+      options:
+        - Number has no evidence tag
+        - Wrong evidence tag (e.g. TARGET presented as measured)
+        - Hardware / QPU / readiness claim without evidence
+        - Medical or therapeutic claim
+        - Certification, peer-review, or revenue claim without source
+        - Contradicts another file or the code
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested correction
+      description: Replacement wording or tag, plus any source you can link.
+    validations:
+      required: true

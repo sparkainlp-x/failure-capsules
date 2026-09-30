@@ -6,6 +6,20 @@ measurements. A capsule records software and configuration versions, a timestamp
 broad device/channel-group categories, an event class, categorical coarse features, a
 seeded synthetic replay recipe, expected and observed behavior, and a checklist.
 
+## What it is / What it is NOT
+
+- **Is:** a standard-library format guard for compact incident capsules, plus a seeded
+  synthetic replay generator. Research prototype.
+- **Is NOT:** an anonymizer, de-identification tool or privacy scanner; a certified safety or
+  medical system; a production service. It never reads device or incident storage.
+
+## Evidence tags
+
+Every number in this repository is tagged: **SYNTHETIC** (generated, e.g. replay values,
+the example capsule, test fixtures), **REPORTED** (measured on named public data),
+**TARGET** (a goal) or **UNRUN** (not executed). Everything here is SYNTHETIC; use on real
+incident workflows is UNRUN. Definitions: [sparkainlp-x/.github](https://github.com/sparkainlp-x/.github#evidence-tags).
+
 ## Run it
 
 Requires Python 3.10 or newer; uses only the Python standard library. From this directory:
@@ -90,6 +104,15 @@ examples/example_capsule.json
 tests/test_failure_capsules.py
 ```
 
+## Security
+
+Please do not open public issues for vulnerabilities; see [SECURITY.md](SECURITY.md)
+(GitHub private vulnerability reporting, no email or phone).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
-MIT, see `LICENSE`.
+MIT, see `LICENSE`. Citation metadata: `CITATION.cff`.
