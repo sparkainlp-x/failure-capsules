@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "software": {"name": "example-monitor", "version": "0.1.0"},
+  "configuration": {"version": "cfg-1"},
+  "timestamp_policy": {"policy": "rounded_hour_utc", "value": "2026-01-01T10:00:00Z"},
+  "device_channel_group": {"device_category": "sensor-node", "channel_group_category": "analog-group-a"},
+  "event_class": "gradual_drift",
+  "coarse_features": {"peak_level_bucket": "high", "duration_bucket": "minutes"},
+  "replay": {"generator": "synthetic-linear-drift-v1", "seed": 417,
+    "recipe": {"points": 32, "baseline": 100.0, "noise_stddev": 0.25, "drift_start": 20, "drift_per_step": 1.0}},
+  "behavior": {"expected": "Alert raised when drift exceeds threshold.", "observed": "No alert raised."},
+  "reproducibility_checklist": {"software_version_recorded": true, "configuration_version_recorded": true,
+    "synthetic_recipe_and_seed_recorded": true, "expected_and_observed_behavior_written": true, "independent_replay_completed": false}
+}
