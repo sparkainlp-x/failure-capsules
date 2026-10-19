@@ -6,6 +6,22 @@ measurements. A capsule records software and configuration versions, a timestamp
 broad device/channel-group categories, an event class, categorical coarse features, a
 seeded synthetic replay recipe, expected and observed behavior, and a checklist.
 
+Live demo (static, no JavaScript, no network requests):
+[sparkainlp-x.github.io/failure-capsules](https://sparkainlp-x.github.io/failure-capsules/).
+It shows the example capsule, its SYNTHETIC replay drawn from the recipe, and five
+deliberately broken capsules with the validator's own error messages.
+
+## Quickstart
+
+Requires Python 3.10 or newer; uses only the Python standard library. No install step:
+
+```
+git clone https://github.com/sparkainlp-x/failure-capsules
+cd failure-capsules
+python3 failure_capsules.py demo
+python3 failure_capsules.py validate examples/example_capsule.json
+```
+
 ## What it is / What it is NOT
 
 - **Is:** a standard-library format guard for compact incident capsules, plus a seeded
@@ -22,12 +38,13 @@ incident workflows is UNRUN. Definitions: [sparkainlp-x/.github](https://github.
 
 ## Run it
 
-Requires Python 3.10 or newer; uses only the Python standard library. From this directory:
+From this directory:
 
 ```
 python3 failure_capsules.py demo
 python3 failure_capsules.py validate examples/example_capsule.json
-python3 -m unittest discover -s tests -v
+python3 -W error -m unittest discover -s tests -v
+python3 scripts/build_site.py _site      # rebuild the Pages demo into _site/index.html
 ```
 
 `demo` validates the checked-in example and prints the first eight values from a
@@ -96,12 +113,24 @@ capsule appropriate for its audience.
 
 The `reproducibility_checklist` fields are self-reported booleans; the tool does not verify them.
 
+## Limitations
+
+- It is a format guard, not a privacy scanner, anonymizer or de-identification tool. It
+  cannot detect sensitive content in ordinary text or under an unfamiliar key.
+- Every number in this repository is SYNTHETIC. Use on real incident workflows is UNRUN,
+  and no privacy, detection or performance metric is claimed.
+- Replay determinism is stated for CPython 3.x only; other implementations may differ.
+- The reproducibility checklist is self-reported and not verified by the tool.
+- There are no signatures, encryption or access control; a valid capsule is not proof
+  that it is safe to share.
+
 ## Project layout
 
 ```
-failure_capsules.py
-examples/example_capsule.json
-tests/test_failure_capsules.py
+failure_capsules.py              validator, replay generator and CLI (stdlib only)
+examples/example_capsule.json    SYNTHETIC example capsule (seed 417)
+scripts/build_site.py            builds the static Pages demo
+tests/                           unit tests (unittest)
 ```
 
 ## Security
@@ -113,6 +142,17 @@ Please do not open public issues for vulnerabilities; see [SECURITY.md](SECURITY
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
+## How to cite
+
+See [CITATION.cff](CITATION.cff). A Zenodo DOI will be listed here after the first release:
+`10.5281/zenodo.XXXXXXX` (placeholder).
+
+> Brisson, J.-F. (2026). *Failure Capsules: offline incident capsules with a deterministic
+> synthetic replay* (Version 0.1.0) [Computer software]. Spark AI NLP, Fredericton, New
+> Brunswick, Canada. https://github.com/sparkainlp-x/failure-capsules
+
 ## License
 
-MIT, see `LICENSE`. Citation metadata: `CITATION.cff`.
+Copyright (c) 2026 Jean-François Brisson, Spark AI NLP.
+
+Released under the MIT License; see [LICENSE](LICENSE).
