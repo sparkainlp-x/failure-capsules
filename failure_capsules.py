@@ -1,4 +1,4 @@
-"""Offline, privacy-conscious incident capsules with synthetic replay only.
+"""Offline, privacy-aware incident capsules with synthetic replay only.
 
 This prototype validates a compact JSON schema and generates deterministic
 synthetic sequences. Replay values are invented; validation reads only the
