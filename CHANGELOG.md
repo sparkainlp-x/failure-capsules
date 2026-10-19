@@ -2,7 +2,7 @@
 
 All notable changes to this project. Evidence tags follow the README (SYNTHETIC / REPORTED / TARGET / UNRUN).
 
-## 0.1.0 (unreleased; date set when tagged)
+## 0.1.0 (2026-10-18)
 
 First public release candidate. All numbers are SYNTHETIC.
 
