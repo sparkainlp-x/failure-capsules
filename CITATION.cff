@@ -1,17 +1,18 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+message: "If you use this software, please cite it as below. Research prototype; all replay values are SYNTHETIC. A Zenodo DOI is added at the first release."
 title: "Failure Capsules"
 abstract: "Offline Python prototype that validates compact incident-capsule JSON and generates deterministic synthetic replays without original sensor measurements."
 type: software
 authors:
   - given-names: "Jean-François"
     family-names: "Brisson"
-    affiliation: "Spark AI NLP"
+    affiliation: "Spark AI NLP, Fredericton, New Brunswick, Canada"
     orcid: "https://orcid.org/0009-0000-9778-5374"
 repository-code: "https://github.com/sparkainlp-x/failure-capsules"
 license: MIT
 version: "0.1.0"
-date-released: "2026-09-29"
+date-released: "2026-10-18"
+url: "https://sparkainlp-x.github.io/failure-capsules/"
 keywords:
   - incident reporting
   - synthetic data
