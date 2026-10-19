@@ -144,8 +144,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT
 
 ## How to cite
 
-See [CITATION.cff](CITATION.cff). A Zenodo DOI will be listed here after the first release:
-`10.5281/zenodo.XXXXXXX` (placeholder).
+See [CITATION.cff](CITATION.cff). Cite the concept DOI [10.5281/zenodo.23462502](https://doi.org/10.5281/zenodo.23462502) for all versions,
+or the version DOI [10.5281/zenodo.23462503](https://doi.org/10.5281/zenodo.23462503) for v0.1.0.
 
 > Brisson, J.-F. (2026). *Failure Capsules: offline incident capsules with a deterministic
 > synthetic replay* (Version 0.1.0) [Computer software]. Spark AI NLP, Fredericton, New

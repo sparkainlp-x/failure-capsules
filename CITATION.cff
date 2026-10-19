@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below. Research prototype; all replay values are SYNTHETIC. A Zenodo DOI is added at the first release."
+message: "If you use this software, please cite it as below. Research prototype; all replay values are SYNTHETIC."
 title: "Failure Capsules"
 abstract: "Offline Python prototype that validates compact incident-capsule JSON and generates deterministic synthetic replays without original sensor measurements."
 type: software
@@ -12,6 +12,14 @@ repository-code: "https://github.com/sparkainlp-x/failure-capsules"
 license: MIT
 version: "0.1.0"
 date-released: "2026-10-18"
+doi: "10.5281/zenodo.23462502"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23462502"
+    description: "Concept DOI (all versions)"
+  - type: doi
+    value: "10.5281/zenodo.23462503"
+    description: "Version DOI for v0.1.0"
 url: "https://sparkainlp-x.github.io/failure-capsules/"
 keywords:
   - incident reporting
